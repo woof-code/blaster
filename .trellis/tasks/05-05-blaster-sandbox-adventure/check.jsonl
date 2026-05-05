@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Validate final implementation against frontend pre-development and quality checklist."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Check adherence to testing, linting, and maintainability expectations."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Ensure entity/state models and APIs remain type-safe and consistent."}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Review for unnecessary duplication and enforce reusable abstractions."}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Check separation of concerns between simulation core and UI-facing logic."}
