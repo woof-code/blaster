@@ -52,6 +52,10 @@ export interface ResourceState {
   water: number;
 }
 
+export interface PlayerInventory {
+  spareWeapons: number;
+}
+
 export type BlasterKind = "combat" | "utility";
 
 export interface Blaster {
@@ -97,6 +101,7 @@ export interface GameState {
   day: number;
   city: City;
   resources: ResourceState;
+  inventory: PlayerInventory;
   loadout: {
     combatBlaster: Blaster;
     utilityBlaster: Blaster;

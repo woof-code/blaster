@@ -55,6 +55,8 @@ Define an MVP for a sandbox/adventure game where the player lives in a city, sur
   * Trigger city-saved outcome.
 * Post-victory mode allows free sandbox continuation or replay/new run.
 * MVP includes a terminal-playable interactive UI shell for the core loop.
+* Terminal UI includes city summary viewing and shop inventory/purchase interactions.
+* MVP includes a browser webpage UI for core actions and state display.
 
 ## Acceptance Criteria (evolving)
 
@@ -68,6 +70,8 @@ Define an MVP for a sandbox/adventure game where the player lives in a city, sur
 * [ ] A run ends if either sustained resource collapse occurs or city damage passes the defined threshold.
 * [ ] Hard-mode tuning is reflected in economy rates and city-damage pacing.
 * [ ] Terminal UI shell allows interactive turn-by-turn play of the MVP loop.
+* [ ] Player can view city/shop details and buy food/water/weapons while the run is active.
+* [ ] Webpage UI allows day progression, mission progression, and shop purchasing with visible state updates.
 
 ## Decision (ADR-lite)
 

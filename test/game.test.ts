@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   applyPostVictoryChoice,
+  buyFromMainShop,
   createNewRun,
   HARD_DIFFICULTY_DEFAULTS,
   runFinalMissionStep,
@@ -12,6 +13,7 @@ describe("blaster sandbox adventure core simulation", () => {
   it("starts runs with required defaults", () => {
     const state = createNewRun("seed-alpha");
     expect(state.resources.money).toBe(100);
+    expect(state.inventory.spareWeapons).toBe(0);
     expect(state.loadout.combatBlaster.kind).toBe("combat");
     expect(state.loadout.utilityBlaster.kind).toBe("utility");
     expect(state.city.shops).toHaveLength(1);
@@ -20,6 +22,18 @@ describe("blaster sandbox adventure core simulation", () => {
       "water",
       "weapon"
     ]);
+  });
+
+  it("supports shop purchases for food and weapons", () => {
+    const state = createNewRun("shop-seed");
+    state.resources.money = 500;
+    const foodResult = buyFromMainShop(state, "food", 1);
+    expect(foodResult.ok).toBe(true);
+    expect(state.resources.food).toBeGreaterThan(4);
+
+    const weaponResult = buyFromMainShop(state, "weapon", 1);
+    expect(weaponResult.ok).toBe(true);
+    expect(state.inventory.spareWeapons).toBe(1);
   });
 
   it("creates deterministic seeded cities", () => {

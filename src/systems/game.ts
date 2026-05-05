@@ -1,5 +1,5 @@
 import { SeededRandom } from "../core/random.js";
-import type { DifficultyTuning, GameState } from "../domain/models.js";
+import type { DifficultyTuning, GameState, ShopItemKind } from "../domain/models.js";
 import { resolveDailyAttack } from "./attack.js";
 import { generateCity } from "./city.js";
 import { advancePlaneProgress, progressFinalMission } from "./progression.js";
@@ -26,6 +26,9 @@ export function createNewRun(seed: string, cityMaxPlots = 40): GameState {
       food: 4,
       water: 4
     },
+    inventory: {
+      spareWeapons: 0
+    },
     loadout: {
       combatBlaster: {
         kind: "combat",
@@ -41,6 +44,52 @@ export function createNewRun(seed: string, cityMaxPlots = 40): GameState {
       partPoints: 0
     },
     status: "active"
+  };
+}
+
+export interface PurchaseResult {
+  ok: boolean;
+  message: string;
+}
+
+export function buyFromMainShop(
+  state: GameState,
+  kind: ShopItemKind,
+  quantity = 1
+): PurchaseResult {
+  const shop = state.city.shops[0];
+  if (!shop) {
+    return { ok: false, message: "No shop is currently available." };
+  }
+  if (quantity <= 0) {
+    return { ok: false, message: "Quantity must be greater than zero." };
+  }
+  const item = shop.inventory.find((entry) => entry.kind === kind);
+  if (!item || item.stock <= 0) {
+    return { ok: false, message: `No ${kind} stock available.` };
+  }
+  if (item.stock < quantity) {
+    return { ok: false, message: `Only ${item.stock} ${kind} in stock.` };
+  }
+
+  const totalCost = item.price * quantity;
+  if (state.resources.money < totalCost) {
+    return { ok: false, message: `Not enough money. Need $${totalCost}.` };
+  }
+
+  state.resources.money -= totalCost;
+  item.stock -= quantity;
+  if (kind === "food") {
+    state.resources.food += quantity;
+  } else if (kind === "water") {
+    state.resources.water += quantity;
+  } else {
+    state.inventory.spareWeapons += quantity;
+  }
+
+  return {
+    ok: true,
+    message: `Bought ${quantity} ${kind} for $${totalCost}.`
   };
 }
 

@@ -2,6 +2,7 @@ import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
 import {
+  buyFromMainShop,
   applyPostVictoryChoice,
   createNewRun,
   runFinalMissionStep,
@@ -9,8 +10,11 @@ import {
 } from "./systems/game.js";
 import {
   canAttemptFinalMission,
+  formatCitySummaryLines,
+  formatShopLines,
   formatStateLines,
   parseActiveCommand,
+  parseBuyCommand,
   parseFailedCommand,
   parseVictoryCommand
 } from "./ui/playHelpers.js";
@@ -73,7 +77,7 @@ async function main(): Promise<void> {
     }
 
     const answer = await rl.question(
-      "Choose action: [a]dvance day, [m]ission step, [s]tatus, [q]uit: "
+      "Choose action: [a]dvance day, [m]ission step, [s]tatus, [c]ity, [shop], [b]uy, [q]uit: "
     );
     const command = parseActiveCommand(answer);
 
@@ -92,6 +96,33 @@ async function main(): Promise<void> {
     }
 
     if (command === "status") {
+      continue;
+    }
+
+    if (command === "city_view") {
+      for (const line of formatCitySummaryLines(state)) {
+        console.log(line);
+      }
+      continue;
+    }
+
+    if (command === "shop_view") {
+      console.log("Shop inventory:");
+      for (const line of formatShopLines(state)) {
+        console.log(line);
+      }
+      continue;
+    }
+
+    if (command === "shop_buy") {
+      const buyInput = await rl.question("Buy format: buy <food|water|weapon> [quantity]: ");
+      const buyCommand = parseBuyCommand(buyInput);
+      if (!buyCommand) {
+        console.log("Invalid buy command.");
+        continue;
+      }
+      const result = buyFromMainShop(state, buyCommand.kind, buyCommand.quantity);
+      console.log(result.message);
       continue;
     }
 
